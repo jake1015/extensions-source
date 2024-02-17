@@ -41,6 +41,9 @@ abstract class NewToki(
     override val client by lazy { buildClient(withRateLimit = false) }
     private val rateLimitedClient by lazy { buildClient(withRateLimit = true) }
 
+    override fun headersBuilder(): Headers.Builder = Headers.Builder()
+        .add("Referer", baseUrl)
+        
     private fun buildClient(withRateLimit: Boolean) =
         network.cloudflareClient.newBuilder()
             .apply { if (withRateLimit) rateLimit(1, preferences.rateLimitPeriod.toLong()) }
